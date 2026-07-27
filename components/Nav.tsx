@@ -6,16 +6,22 @@ import { AnimatePresence, motion } from "framer-motion";
 import { companyInfo } from "@/lib/data/content";
 
 const links = [
-  { href: "#about", label: "About" },
-  { href: "#services", label: "Services" },
-  { href: "#fieldlog", label: "Field Log" },
-  { href: "#industries", label: "Industries" },
-  { href: "#technology", label: "Technology" },
-  { href: "#why", label: "Why Us" },
-  { href: "#contact", label: "Contact" },
+  { id: "hero", label: "Home" },
+  { id: "about", label: "About" },
+  { id: "services", label: "Services" },
+  { id: "fieldlog", label: "Field Log" },
+  { id: "industries", label: "Industries" },
+  { id: "technology", label: "Technology" },
+  { id: "why", label: "Why Us" },
+  { id: "contact", label: "Contact" },
 ];
 
-export default function Nav() {
+interface NavProps {
+  activeSection: string;
+  setActiveSection: (section: string) => void;
+}
+
+export default function Nav({ activeSection, setActiveSection }: NavProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -47,17 +53,19 @@ export default function Nav() {
 
         <nav className="hidden lg:flex items-center gap-8">
           {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="text-[13.5px] font-medium text-steel-light hover:text-white transition-colors"
+            <button
+              key={l.id}
+              onClick={() => setActiveSection(l.id)}
+              className={`text-[13.5px] font-medium transition-colors ${
+                activeSection === l.id ? "text-white" : "text-steel-light hover:text-white"
+              }`}
             >
               {l.label}
-            </a>
+            </button>
           ))}
         </nav>
 
-        <a href="#hero" className="flex items-center gap-3 group">
+        <button onClick={() => setActiveSection("hero")} className="flex items-center gap-3 group cursor-pointer">
           <Image
             src="/images/eagle watch badge.png"
             alt="Eagle Watch Security logo"
@@ -72,14 +80,14 @@ export default function Nav() {
               {companyInfo.tagline}
             </span>
           </span>
-        </a>
+        </button>
 
-        <a
-          href="#contact"
+        <button
+          onClick={() => setActiveSection("contact")}
           className="ml-auto hidden lg:inline-flex items-center gap-2 bg-signal text-white text-[13px] font-semibold px-[18px] py-2.5 rounded-[3px] hover:bg-signal-dim transition-colors"
         >
           Request a Quote
-        </a>
+        </button>
       </div>
 
       <AnimatePresence>
@@ -94,22 +102,28 @@ export default function Nav() {
           >
             <div className="wrap flex flex-col py-4 gap-1">
               {links.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  className="text-steel-light hover:text-white py-2.5 text-sm font-medium"
+                <button
+                  key={l.id}
+                  onClick={() => {
+                    setActiveSection(l.id);
+                    setOpen(false);
+                  }}
+                  className={`text-left py-2.5 text-sm font-medium transition-colors ${
+                    activeSection === l.id ? "text-white" : "text-steel-light hover:text-white"
+                  }`}
                 >
                   {l.label}
-                </a>
+                </button>
               ))}
-              <a
-                href="#contact"
-                onClick={() => setOpen(false)}
-                className="mt-2 inline-flex justify-center items-center gap-2 bg-signal text-white text-sm font-semibold px-4 py-3 rounded-[3px]"
+              <button
+                onClick={() => {
+                  setActiveSection("contact");
+                  setOpen(false);
+                }}
+                className="mt-2 w-full inline-flex justify-center items-center gap-2 bg-signal text-white text-sm font-semibold px-4 py-3 rounded-[3px]"
               >
                 Request a Quote
-              </a>
+              </button>
             </div>
           </motion.nav>
         )}
